@@ -1,0 +1,15 @@
+﻿{
+	"name": "com.carcajgames.unity-utilities",
+	"version": "1.0.0",
+	"displayName": "Unity Utilities",
+	"description": "A collection of utilities for Unity",
+	"unity": "2018.3",
+	"dependencies": {
+	},
+	"keywords": ["library", "utility", "grids"],
+	"author": {
+		"name": "Alexandru Dumitru Maroz",
+		"email": "alexandru666@outlook.es",
+		"url": "https://github.com/Alexandru-D6"
+	}
+}
