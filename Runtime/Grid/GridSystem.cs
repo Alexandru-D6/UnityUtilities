@@ -6,7 +6,9 @@ namespace Grid {
     public class GridSystem<TGridObject> {
 
         public enum Dimension { X, Y, Z};
+#if UNITY_EDITOR
         private bool _debug = false;
+#endif // UNITY_EDITOR
 
         public Action<Vector3Int, TGridObject, bool> OnGridValueChanged;
 
@@ -15,7 +17,10 @@ namespace Grid {
         private Vector3 _originPosition;
         private TGridObject[,,] _gridArray;
 
+#if UNITY_EDITOR
         private TextMesh[,,] _debugTextArray;
+        private GameObject _debugContainer;
+#endif // UNITY_EDITOR
 
         public GridSystem(Vector3Int gridSize, float cellSize, Vector3 originPosition, System.Func<TGridObject> createGridObject) {
             this._gridSize = gridSize;
@@ -32,6 +37,9 @@ namespace Grid {
                 }
             }
 
+#if UNITY_EDITOR
+            _debugContainer = new GameObject("Debug - (DO NOT DELETE)");
+
             if (_debug) {
                 _debugTextArray = new TextMesh[gridSize.x, gridSize.y, gridSize.z];
 
@@ -42,7 +50,8 @@ namespace Grid {
                                 GetWorldPosition(new Vector3Int(i, j, k)) + new Vector3(cellSize,cellSize,cellSize) * .5f,
                                 new Vector3((gridSize.y == 1) ? 1 : 0, (gridSize.x == 1 && gridSize.z != 1) ? 1 : 0,0),
                                 Color.black,
-                                fontSize: 60);
+                                fontSize: 60,
+                                parent: _debugContainer.transform);
                         }
                     }
                 }
@@ -57,6 +66,7 @@ namespace Grid {
                     }
                 }
             }
+#endif // UNITY_EDITOR
 
         }
 
@@ -91,9 +101,11 @@ namespace Grid {
             // The trigger is only send if object is not null, that's for the cases when you wanna free that position
             if (OnGridValueChanged != null && value != null) OnGridValueChanged(position, value, activeAction);
 
+#if UNITY_EDITOR
             if (_debug && value != null) {
                 _debugTextArray[position.x, position.y, position.z].text = value.ToString();
             }
+#endif // UNITY_EDITOR
 
             return true;
         }
@@ -134,7 +146,8 @@ namespace Grid {
                                 GetWorldPosition(new Vector3Int(i, j, k)) + new Vector3(_cellSize,_cellSize,_cellSize) * .5f,
                                 new Vector3((_gridSize.y == 1) ? 1 : 0, (_gridSize.x == 1 && _gridSize.z != 1) ? 1 : 0,0),
                                 Color.black,
-                                fontSize: 60);
+                                fontSize: 60,
+                                parent: _debugContainer.transform);
                         }
                     }
                 }

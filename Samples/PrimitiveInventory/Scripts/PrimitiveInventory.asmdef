@@ -1,0 +1,16 @@
+{
+    "name": "PrimitiveInventory",
+    "rootNamespace": "",
+    "references": [
+        "GUID:856a11d7213f3594fa1643e0b27c56eb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

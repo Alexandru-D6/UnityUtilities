@@ -1,9 +1,8 @@
-using System;
+using Grid;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils;
 
-namespace Grid {
+namespace Samples.PrimitiveInventory.Scripts {
     public class GridSystemVisual : MonoBehaviour {
 
         private GridSystem<Cell> _inventory;
@@ -23,6 +22,7 @@ namespace Grid {
 
         void Start() {
             _inventory = new GridSystem<Cell>(gridSize, cellSize, transform.position, () => { return null; });
+            _inventory.SetDebug(true);
             _inventory.OnGridValueChanged += OnCellChanged;
 
             for (int i = 0; i < _inventory.GetLength(0); ++i) {

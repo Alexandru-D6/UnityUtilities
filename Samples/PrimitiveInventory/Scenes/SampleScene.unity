@@ -503,6 +503,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HollowCell
       objectReference: {fileID: 0}
+    - target: {fileID: 4358433246109704484, guid: 4f0d9db12c4f9ec4f8b7d693f44001b6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4358433246520800813, guid: 4f0d9db12c4f9ec4f8b7d693f44001b6,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
