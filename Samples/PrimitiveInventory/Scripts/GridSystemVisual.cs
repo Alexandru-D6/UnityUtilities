@@ -22,7 +22,9 @@ namespace Samples.PrimitiveInventory.Scripts {
 
         void Start() {
             _inventory = new GridSystem<Cell>(gridSize, cellSize, transform.position, () => { return null; });
+#if UNITY_EDITOR
             _inventory.SetDebug(true);
+#endif // UNITY_EDITOR
             _inventory.OnGridValueChanged += OnCellChanged;
 
             for (int i = 0; i < _inventory.GetLength(0); ++i) {

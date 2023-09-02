@@ -165,6 +165,6 @@ namespace Grid {
                 }
             }
         }
-    }
 #endif // UNITY_EDITOR
+    }
 }
