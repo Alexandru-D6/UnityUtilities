@@ -10,6 +10,7 @@ namespace OptionSelectorUI {
     public class OptionSelector : MonoBehaviour {
 
         private List<string> _namesToDisplay;
+        private Vector2 _boxSize;
 
         [SerializeField] private Transform _itemsCollection;
         [SerializeField] private Transform _itemPrefab;
@@ -24,7 +25,7 @@ namespace OptionSelectorUI {
 
 #endregion
 
-        public void Initialize(string name, List<string> namesToDisplay, Transform canvasParent) {
+        public void Initialize(string name, List<string> namesToDisplay, Transform canvasParent, Vector2 boxSize) {
             // Handle multiple instances of selector with the same Name
             Transform prevSelector = canvasParent.Find(name);
 
@@ -34,13 +35,14 @@ namespace OptionSelectorUI {
 
             // Saving variables
             _namesToDisplay = namesToDisplay;
+            _boxSize = boxSize;
 
             // Config gameObject
             gameObject.name = name;
             transform.SetParent(canvasParent, true);
 
             // Initialize selector
-            InitializeButtons();
+            InitializeButtonsVerticalList();
             _itemsCollection.position = Input.mousePosition;
         }
 
@@ -60,9 +62,9 @@ namespace OptionSelectorUI {
 
 #region Private Methods
 
-        private void InitializeButtons() {
+        private void InitializeButtonsVerticalList() {
             float currentPosY = 0f;
-            float incrememtsPosY = 32f;
+            float incrememtsPosY = Mathf.Floor(_boxSize.y / _namesToDisplay.Count);
 
             foreach (var name in _namesToDisplay) {
                 Transform buttonObject = Instantiate(_itemPrefab, _itemsCollection);
@@ -81,6 +83,10 @@ namespace OptionSelectorUI {
                 // GameObject position
                 Vector3 backupPos = buttonObject.localPosition;
                 buttonObject.localPosition = new Vector3(backupPos.x, -1f * currentPosY, backupPos.z);
+
+                // Button size
+                RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(_boxSize.x, incrememtsPosY - 0.5f);
 
                 currentPosY += incrememtsPosY;
             }

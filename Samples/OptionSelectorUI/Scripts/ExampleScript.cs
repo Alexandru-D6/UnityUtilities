@@ -23,7 +23,7 @@ namespace Samples.OptionSelectorUI.Scripts {
 
         private OptionSelector InstantiateSelectorUI() {
             OptionSelector result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelector>();
-            result.Initialize("Piece Promotion Selector", new List<string>(){"Queen", "Rook", "Bishop"}, _canvas);
+            result.Initialize("Piece Promotion Selector", new List<string>(){"Queen", "Rook", "Bishop"}, _canvas, new Vector2(150f, 200f));
             result.OnItemSelected += OnPieceSelected;
 
             return result;
