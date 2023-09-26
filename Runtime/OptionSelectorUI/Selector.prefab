@@ -116,7 +116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemsCollection: {fileID: 6039657061386343885}
-  _itemPrefab: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd, type: 3}
+  _itemPrefab: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
+    type: 3}
 --- !u!1 &8150340789364510769
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,7 +23,8 @@ namespace Samples.OptionSelectorUI.Scripts {
 
         private OptionSelector InstantiateSelectorUI() {
             OptionSelector result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelector>();
-            result.Initialize("Piece Promotion Selector", new List<string>(){"Queen", "Rook", "Bishop"}, _canvas, new Vector2(150f, 200f));
+            result.Initialize("Piece Promotion Selector", new List<string>(){"Queen", "Rook", "Bishop", "Example1", "Exmaple2", "Exmaple3", "Example4"}, _canvas, new Vector2(150f, 200f));
+            result.SetDestroyOnButtonPressed(false);
             result.OnItemSelected += OnPieceSelected;
 
             return result;
