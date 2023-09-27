@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace Samples.OptionSelectorUI.Scripts {
     public class ExampleScript : MonoBehaviour {
 
-        [SerializeField] private OptionSelector _selectorUIPrefab;
+        [SerializeField] private Transform _selectorUIPrefab;
         [SerializeField] private Transform _canvas;
 
         private Camera _camera;
@@ -17,21 +17,28 @@ namespace Samples.OptionSelectorUI.Scripts {
 
         void Update() {
             if (Input.GetMouseButtonDown((int) MouseButton.RightMouse)) {
-                InstantiateSelectorUI();
+                InstantiateSelectorList();
             }
         }
 
-        private OptionSelector InstantiateSelectorUI() {
-            OptionSelector result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelector>();
-            result.Initialize("Piece Promotion Selector", new List<string>(){"Queen", "Rook", "Bishop", "Example1", "Exmaple2", "Exmaple3", "Example4"}, _canvas, new Vector2(150f, 200f));
+        private OptionSelector<ListItemScriptableObject> InstantiateSelectorList() {
+            OptionSelector<ListItemScriptableObject> result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelector<ListItemScriptableObject>>();
+            List<ListItemScriptableObject> items = new List<ListItemScriptableObject> {
+                new ListItemScriptableObject { name = "Pawn",   sprite = null },
+                new ListItemScriptableObject { name = "Knight", sprite = null },
+                new ListItemScriptableObject { name = "Bishop", sprite = null },
+                new ListItemScriptableObject { name = "Rook",   sprite = null }
+            };
+
+            result.Initialize("Piece Promotion Selector", items, _canvas, new Vector2(150f, 200f), new Vector2(1f, -1f));
             result.SetDestroyOnButtonPressed(false);
             result.OnItemSelected += OnPieceSelected;
 
             return result;
         }
 
-        private void OnPieceSelected(object sender, OptionSelector.OnItemSelectedArgs e) {
-            Debug.Log("Selected piece: " + e.ButtonName);
+        private void OnPieceSelected(object sender, OptionSelectorUtils.OnItemSelectedArgs e) {
+            Debug.Log("Selected piece: " + e.id);
         }
     }
 }
