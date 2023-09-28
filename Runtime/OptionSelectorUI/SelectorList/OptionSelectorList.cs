@@ -1,9 +1,9 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using Button = UnityEngine.UI.Button;
 
-namespace OptionSelectorUI {
+namespace OptionSelectorUI.SelectorList {
 
     public class OptionSelectorList : OptionSelector<ItemSelectorList> {
 
