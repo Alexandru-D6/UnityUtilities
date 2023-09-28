@@ -5,7 +5,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI {
 
-    public class OptionSelectorList : OptionSelector<ListItemScriptableObject> {
+    public class OptionSelectorList : OptionSelector<ItemSelectorList> {
 
         protected override void InitializeButtons() {
             float incrememtsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
