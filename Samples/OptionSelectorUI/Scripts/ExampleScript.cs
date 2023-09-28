@@ -21,7 +21,7 @@ namespace Samples.OptionSelectorUI.Scripts {
             }
         }
 
-        private OptionSelector<ListItemScriptableObject> InstantiateSelectorList() {
+        private void InstantiateSelectorList() {
             OptionSelector<ListItemScriptableObject> result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelector<ListItemScriptableObject>>();
             List<ListItemScriptableObject> items = new List<ListItemScriptableObject> {
                 new ListItemScriptableObject { name = "Pawn",   sprite = null },
@@ -33,8 +33,6 @@ namespace Samples.OptionSelectorUI.Scripts {
             result.Initialize("Piece Promotion Selector", items, _canvas, new Vector2(150f, 200f), new Vector2(1f, -1f));
             result.SetDestroyOnButtonPressed(false);
             result.OnItemSelected += OnPieceSelected;
-
-            return result;
         }
 
         private void OnPieceSelected(object sender, OptionSelectorUtils.OnItemSelectedArgs e) {

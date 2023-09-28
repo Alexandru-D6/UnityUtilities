@@ -16,6 +16,8 @@ namespace OptionSelectorUI {
         [SerializeField] protected Transform _itemsCollection;
         [SerializeField] protected Transform _itemPrefab;
 
+        private bool _initialized = false;
+
 #region Callback function
 
         public event EventHandler<OptionSelectorUtils.OnItemSelectedArgs> OnItemSelected;
@@ -53,7 +55,7 @@ namespace OptionSelectorUI {
             InitializeButtons();
             _itemsCollection.position = Input.mousePosition;
 
-            gameObject.SetActive(true);
+            _initialized = true;
         }
 
         public void SetDestroyOnButtonPressed(bool value) {
@@ -66,12 +68,8 @@ namespace OptionSelectorUI {
 
 #region Monobehaviour methods
 
-        private void Start() {
-            gameObject.SetActive(false);
-        }
-
         private void Update() {
-            if (_destroyOnMouseClick && Input.GetMouseButtonUp((int) MouseButton.LeftMouse)) {
+            if (_initialized && _destroyOnMouseClick && Input.GetMouseButtonUp((int) MouseButton.LeftMouse)) {
                 Destroy(gameObject);
             }
         }

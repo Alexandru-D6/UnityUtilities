@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine.EventSystems;
 using Button = UnityEngine.UI.Button;
 
-namespace OptionSelectorUI.ListSelector {
+namespace OptionSelectorUI {
 
-    public class OptionSelectorList<ListItemScriptableObject> : OptionSelector<ListItemScriptableObject> {
+    public class OptionSelectorList : OptionSelector<ListItemScriptableObject> {
 
         protected override void InitializeButtons() {
             float incrememtsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
@@ -22,14 +22,14 @@ namespace OptionSelectorUI.ListSelector {
 
             _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
-            foreach (var name in _items) {
+            foreach (var item in _items) {
                 Transform buttonObject = Instantiate(_itemPrefab, _itemsCollection);
-                buttonObject.gameObject.name = (name + "Button");
+                buttonObject.gameObject.name = (item.name + "Button");
 
                 // Click action
                 Button button = buttonObject.GetComponent<Button>();
                 button.onClick.AddListener(() => {
-                    ButtonPressed(name.ToString());
+                    ButtonPressed(item.name);
                 });
 
                 EventTrigger trigger = buttonObject.GetComponent<EventTrigger>();
@@ -47,7 +47,7 @@ namespace OptionSelectorUI.ListSelector {
 
                 // TMP_Text text
                 TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
-                textObject.text = name.ToString();
+                textObject.text = item.name;
 
                 // GameObject position
                 Vector3 backupPos = buttonObject.localPosition;
