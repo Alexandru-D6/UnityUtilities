@@ -11,6 +11,8 @@ namespace Samples.OptionSelectorUI.Scripts {
         [SerializeField] private Transform _selectorUIPrefab;
         [SerializeField] private Transform _canvas;
 
+        [SerializeField] private List<Sprite> _sprites;
+
         private Camera _camera;
         void Start() {
             _camera = Camera.main;
@@ -26,10 +28,10 @@ namespace Samples.OptionSelectorUI.Scripts {
             OptionSelector<ItemSelectorList> result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelectorList>();
 
             List<ItemSelectorList> items = new List<ItemSelectorList> {
-                new ItemSelectorList { name = "Pawn",   sprite = null },
-                new ItemSelectorList { name = "Knight", sprite = null },
-                new ItemSelectorList { name = "Bishop", sprite = null },
-                new ItemSelectorList { name = "Rook",   sprite = null }
+                new ItemSelectorList { id = "1", name = "", sprite = _sprites[0] },
+                new ItemSelectorList { id = "2", name = "", sprite = _sprites[1] },
+                new ItemSelectorList { id = "3", name = "", sprite = _sprites[2] },
+                new ItemSelectorList { id = "4", name = "", sprite = _sprites[3] }
             };
 
             result.Initialize("Piece Promotion Selector", items, _canvas, new Vector2(150f, 200f), new Vector2(1f, -1f));

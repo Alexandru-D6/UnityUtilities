@@ -1,11 +1,16 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI.SelectorList {
 
     public class OptionSelectorList : OptionSelector<ItemSelectorList> {
+
+        [SerializeField] private Transform _itemPrefab_OnlyImage;
+        [SerializeField] private Transform _itemPrefab_OnlyName;
 
         protected override void InitializeButtons() {
             float incrememtsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
@@ -23,13 +28,24 @@ namespace OptionSelectorUI.SelectorList {
             _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
             foreach (var item in _items) {
-                Transform buttonObject = Instantiate(_itemPrefab, _itemsCollection);
-                buttonObject.gameObject.name = (item.name + "Button");
+                Assert.IsFalse(item.name == "" && item.sprite == null);
+
+                Transform buttonObject;
+
+                if (item.name != "" && item.sprite != null) {
+                    buttonObject = Instantiate(_itemPrefab, _itemsCollection);
+                } else if (item.name == "") {
+                    buttonObject = Instantiate(_itemPrefab_OnlyImage, _itemsCollection);
+                } else {
+                    buttonObject = Instantiate(_itemPrefab_OnlyName, _itemsCollection);
+                }
+
+                buttonObject.gameObject.name = (item.name == "" ? item.name : item.sprite.name) + "Button";
 
                 // Click action
                 Button button = buttonObject.GetComponent<Button>();
                 button.onClick.AddListener(() => {
-                    ButtonPressed(item.name);
+                    ButtonPressed(item.id);
                 });
 
                 EventTrigger trigger = buttonObject.GetComponent<EventTrigger>();
@@ -55,6 +71,11 @@ namespace OptionSelectorUI.SelectorList {
 
                 // Button size
                 RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
+
+                if (item.name == "") {
+                    Debug.Log(item.sprite.bounds);
+                    rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrememtsPosY - 0.5f);
+                }
                 rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrememtsPosY - 0.5f);
 
                 currentPos += new Vector2(0f, signs.y * (incrememtsPosY));
