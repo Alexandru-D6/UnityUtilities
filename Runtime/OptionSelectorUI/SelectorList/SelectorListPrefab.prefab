@@ -143,9 +143,9 @@ MonoBehaviour:
   _itemsCollection: {fileID: 6530083786537728940}
   _itemPrefab: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
     type: 3}
-  _itemPrefab_OnlyImage: {fileID: 8317890916227388190, guid: 409172a274a4921479392ece579fc36a,
+  _itemPrefab_OnlyImage: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
     type: 3}
-  _itemPrefab_OnlyName: {fileID: 8317890916227388190, guid: 1b61dd2373fd1cc4b828215821dc564e,
+  _itemPrefab_OnlyName: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
     type: 3}
 --- !u!224 &6530083786537728940 stripped
 RectTransform:

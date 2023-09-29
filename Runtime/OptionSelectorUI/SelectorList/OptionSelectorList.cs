@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI.SelectorList {
@@ -65,17 +67,27 @@ namespace OptionSelectorUI.SelectorList {
                 TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
                 textObject.text = item.name;
 
+                // Image sprite
+                Image imageObject = buttonObject.GetChild(0).GetComponent<Image>();
+                imageObject.sprite = item.sprite;
+                Vector2 spriteScaleFactor = new Vector2(item.sprite.bounds.extents.y / item.sprite.bounds.extents.x,
+                                                        item.sprite.bounds.extents.x / item.sprite.bounds.extents.y);
+
+                Vector2 anchorMax = imageObject.GetComponent<RectTransform>().anchorMax;
+                Vector2 anchorMin = imageObject.GetComponent<RectTransform>().anchorMin;
+                Vector2 imageScaleFactor = new Vector2(incrememtsPosY / (_selectorSize.x * (anchorMax.x - anchorMin.x)),
+                                                        (_selectorSize.x * (anchorMax.x - anchorMin.x)) / incrememtsPosY);
+
+                imageObject.GetComponent<RectTransform>().localScale = new Vector3(1f * Mathf.Clamp(imageScaleFactor.x * spriteScaleFactor.y , 0f, 1f),
+                                                                                    1f * Mathf.Clamp(imageScaleFactor.y * spriteScaleFactor.x, 0f, 1f),
+                                                                                    1f);
+
                 // GameObject position
                 Vector3 backupPos = buttonObject.localPosition;
                 buttonObject.localPosition = new Vector3(currentPos.x, currentPos.y, backupPos.z);
 
                 // Button size
                 RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
-
-                if (item.name == "") {
-                    Debug.Log(item.sprite.bounds);
-                    rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrememtsPosY - 0.5f);
-                }
                 rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrememtsPosY - 0.5f);
 
                 currentPos += new Vector2(0f, signs.y * (incrememtsPosY));
