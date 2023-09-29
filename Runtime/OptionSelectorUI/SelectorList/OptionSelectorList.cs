@@ -30,7 +30,7 @@ namespace OptionSelectorUI.SelectorList {
             _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
             foreach (var item in _items) {
-                Assert.IsFalse(item.name == "" && item.sprite == null);
+                Assert.IsFalse(item.id == "" || (item.name == "" && item.sprite == null));
 
                 Transform buttonObject;
 
@@ -64,23 +64,38 @@ namespace OptionSelectorUI.SelectorList {
                 trigger.triggers.Add(entry);
 
                 // TMP_Text text
-                TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
-                textObject.text = item.name;
+                if (item.name != "") {
+                    TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
+                    textObject.text = item.name;
+                }
 
-                // Image sprite
-                Image imageObject = buttonObject.GetChild(0).GetComponent<Image>();
-                imageObject.sprite = item.sprite;
-                Vector2 spriteScaleFactor = new Vector2(item.sprite.bounds.extents.y / item.sprite.bounds.extents.x,
-                                                        item.sprite.bounds.extents.x / item.sprite.bounds.extents.y);
+                if (item.sprite != null) {
+                    // Image sprite
+                    Image imageObject = null;
 
-                Vector2 anchorMax = imageObject.GetComponent<RectTransform>().anchorMax;
-                Vector2 anchorMin = imageObject.GetComponent<RectTransform>().anchorMin;
-                Vector2 imageScaleFactor = new Vector2(incrememtsPosY / (_selectorSize.x * (anchorMax.x - anchorMin.x)),
-                                                        (_selectorSize.x * (anchorMax.x - anchorMin.x)) / incrememtsPosY);
+                    foreach (var image in buttonObject.GetComponentsInChildren<Image>()) {
+                        if (image.gameObject != buttonObject.gameObject) {
+                            imageObject = image;
+                            break;
+                        }
+                    }
 
-                imageObject.GetComponent<RectTransform>().localScale = new Vector3(1f * Mathf.Clamp(imageScaleFactor.x * spriteScaleFactor.y , 0f, 1f),
-                                                                                    1f * Mathf.Clamp(imageScaleFactor.y * spriteScaleFactor.x, 0f, 1f),
-                                                                                    1f);
+                    Assert.IsNotNull(imageObject);
+
+                    imageObject.sprite = item.sprite;
+
+                    // Image scale factor
+                    Vector2 spriteScaleFactor = new Vector2(item.sprite.bounds.extents.y / item.sprite.bounds.extents.x,
+                                                            item.sprite.bounds.extents.x / item.sprite.bounds.extents.y);
+                    Vector2 anchorMax = imageObject.GetComponent<RectTransform>().anchorMax;
+                    Vector2 anchorMin = imageObject.GetComponent<RectTransform>().anchorMin;
+                    Vector2 imageScaleFactor = new Vector2(incrememtsPosY / (_selectorSize.x * (anchorMax.x - anchorMin.x)),
+                                                            (_selectorSize.x * (anchorMax.x - anchorMin.x)) / incrememtsPosY);
+
+                    imageObject.GetComponent<RectTransform>().localScale = new Vector3( 1f * Mathf.Clamp(imageScaleFactor.x * spriteScaleFactor.y , 0f, 1f),
+                                                                                        1f * Mathf.Clamp(imageScaleFactor.y * spriteScaleFactor.x, 0f, 1f),
+                                                                                        1f);
+                }
 
                 // GameObject position
                 Vector3 backupPos = buttonObject.localPosition;
