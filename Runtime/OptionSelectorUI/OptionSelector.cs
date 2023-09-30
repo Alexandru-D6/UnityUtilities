@@ -5,11 +5,12 @@ using UnityEngine.UIElements;
 
 namespace OptionSelectorUI {
 
-    public abstract class OptionSelector<T> : MonoBehaviour {
+    public abstract class OptionSelector<TItemObject, TItemType> : MonoBehaviour {
 
-        protected List<T> _items;
+        protected List<TItemObject> _items;
         protected Vector2 _selectorSize;
         protected Vector2 _direction;
+        protected Camera _camera;
         protected bool _destroyOnButtonPressed = true;
         protected bool _destroyOnMouseClick = true;
 
@@ -20,11 +21,11 @@ namespace OptionSelectorUI {
 
 #region Callback function
 
-        public event EventHandler<OptionSelectorUtils.OnItemSelectedArgs> OnItemSelected;
+        public event EventHandler<OptionSelectorUtils.OnItemSelectedArgs<TItemType>> OnItemSelected;
 
-        public void ButtonPressed(string id) {
-            OnItemSelected?.Invoke(this, new OptionSelectorUtils.OnItemSelectedArgs {
-                id = id
+        public void ButtonPressed(TItemType id) {
+            OnItemSelected?.Invoke(this, new OptionSelectorUtils.OnItemSelectedArgs<TItemType> {
+                Id = id
             });
 
             if (_destroyOnButtonPressed) {
@@ -34,7 +35,7 @@ namespace OptionSelectorUI {
 
 #endregion
 
-        public void Initialize(string selectorId, List<T> items, Transform canvasParent, Vector2 selectorSize, Vector2 direction) {
+        public void Initialize(string selectorId, List<TItemObject> items, Transform canvasParent, Camera cam, Vector2 selectorSize, Vector2 direction) {
             // Handle multiple instances of selector with the same Name
             Transform prevSelector = canvasParent.Find(selectorId);
 
@@ -46,6 +47,7 @@ namespace OptionSelectorUI {
             _items = items;
             _selectorSize = selectorSize;
             _direction = direction;
+            _camera = cam;
 
             // Config gameObject
             gameObject.name = selectorId;

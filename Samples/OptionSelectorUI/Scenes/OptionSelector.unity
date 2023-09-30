@@ -353,15 +353,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d758b6b3e2ce43a4f91ff2856f096509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectorUIPrefab: {fileID: 5110338670801684384, guid: 9e551b56f52c64c49bded6121344e57c,
+  _selectorUIPrefab: {fileID: 3068787803114839767, guid: e6c3f2486ad23314f83715fd2e362a82,
     type: 3}
   _canvas: {fileID: 1605651405}
   _sprites:
-  - {fileID: 1630761563, guid: 93eda449ce747cd48a77f25c49395ba5, type: 3}
-  - {fileID: -132255517, guid: 93eda449ce747cd48a77f25c49395ba5, type: 3}
-  - {fileID: 67745889, guid: cbe56f8ce092640439a9cd11bc24751d, type: 3}
-  - {fileID: 506676469, guid: cbe56f8ce092640439a9cd11bc24751d, type: 3}
-  _selectorSize: {x: 160, y: 120}
+  - {fileID: 21300000, guid: c03b01c8c2710364683cb3490d972483, type: 3}
+  - {fileID: 21300000, guid: d6dd1cabc3348994eac4899a657edcb0, type: 3}
+  - {fileID: 21300000, guid: fe92c4c2e69371d4bb4d6a7c04838bfb, type: 3}
+  - {fileID: 21300000, guid: 10d58dd29dbe46049b33b5b26b639f55, type: 3}
+  _selectorSize: {x: 160, y: 240}
 --- !u!1 &1605651404
 GameObject:
   m_ObjectHideFlags: 0

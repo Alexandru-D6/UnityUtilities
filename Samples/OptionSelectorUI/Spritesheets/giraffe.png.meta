@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cbe56f8ce092640439a9cd11bc24751d
+guid: d6dd1cabc3348994eac4899a657edcb0
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -52,7 +52,7 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
@@ -147,150 +147,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: square_nodetails 1_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1536
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d491ed756a12a4342932a3cbc3bb1cf5
-      internalID: 1004478177
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: square_nodetails 1_1
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1024
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 13b7c007a34eef1448aeeee93aa90deb
-      internalID: 1505872560
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: square_nodetails 1_2
-      rect:
-        serializedVersion: 2
-        x: 258
-        y: 1024
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 73423c0b61ec55c479a5dc497b25b89c
-      internalID: 67745889
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: square_nodetails 1_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 512
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ded5c76bab2bf4149b77665d32fa3852
-      internalID: 506676469
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: square_nodetails 1_4
-      rect:
-        serializedVersion: 2
-        x: 258
-        y: 512
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 07e75f62a4186464ca493c256ee87b9a
-      internalID: 1591172448
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: square_nodetails 1_5
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 258
-        height: 512
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dcc73d6143f3e754ebc04340e2aac723
-      internalID: 165177589
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 75d4fd013a2b63e4f9d2b7b93dcf0d7a
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      square_nodetails 1_0: 1004478177
-      square_nodetails 1_1: 1505872560
-      square_nodetails 1_2: 67745889
-      square_nodetails 1_3: 506676469
-      square_nodetails 1_4: 1591172448
-      square_nodetails 1_5: 165177589
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

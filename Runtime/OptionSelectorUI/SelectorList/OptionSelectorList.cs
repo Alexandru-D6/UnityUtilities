@@ -1,53 +1,75 @@
-using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
-using UnityEngine.Experimental.Rendering;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI.SelectorList {
 
-    public class OptionSelectorList : OptionSelector<ItemSelectorList> {
+    public class OptionSelectorList<TItemType> : OptionSelector<ItemSelectorList<TItemType>, TItemType> {
+
+        private enum ButtonType {
+            ImageAndText,
+            OnlyImage,
+            OnlyText,
+            Null
+        }
 
         [SerializeField] private Transform _itemPrefab_OnlyImage;
         [SerializeField] private Transform _itemPrefab_OnlyName;
 
+        private ButtonType _buttonType = ButtonType.Null;
+
         protected override void InitializeButtons() {
-            float incrememtsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
-            Vector2 currentPos;
+            float incrementsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
+
             Vector2 signs = new Vector2(
-                ((Input.mousePosition.x + _selectorSize.x > Camera.main.pixelWidth) ? -1f : 1f),
-                ((Input.mousePosition.y - (_items.Count * (incrememtsPosY + 0.5f))  > 0f) ? -1f : 1f)
+                ((Input.mousePosition.x + _selectorSize.x > _camera.pixelWidth) ? -1f : 1f),
+                ((Input.mousePosition.y - (_items.Count * (incrementsPosY + 0.5f))  > 0f) ? -1f : 1f)
             );
 
-            currentPos = new Vector2(
+            Vector2 currentPos = new Vector2(
                 (signs.x < 0f) ? -1f * _selectorSize.x : 0f,
-                (signs.y < 0f) ? 0f : incrememtsPosY
+                (signs.y < 0f) ? 0f : incrementsPosY
             );
 
             _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
+            if (_items[0].Name != "" && _items[0].Sprite != null) {
+                _buttonType = ButtonType.ImageAndText;
+            } else if (_items[0].Name == "") {
+                _buttonType = ButtonType.OnlyImage;
+            } else {
+                _buttonType = ButtonType.OnlyText;
+            }
+
+            List<TMP_Text> texts = new List<TMP_Text>();
+            float minTextSize = 1000f;
+
             foreach (var item in _items) {
-                Assert.IsFalse(item.id == "" || (item.name == "" && item.sprite == null));
+                Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
 
                 Transform buttonObject;
 
-                if (item.name != "" && item.sprite != null) {
+                if (item.Name != "" && item.Sprite != null) {
+                    Assert.IsFalse(_buttonType != ButtonType.ImageAndText, "All items must have the same type.");
                     buttonObject = Instantiate(_itemPrefab, _itemsCollection);
-                } else if (item.name == "") {
+                } else if (item.Name == "") {
+                    Assert.IsFalse(_buttonType != ButtonType.OnlyImage, "All items must have the same type.");
                     buttonObject = Instantiate(_itemPrefab_OnlyImage, _itemsCollection);
                 } else {
+                    Assert.IsFalse(_buttonType != ButtonType.OnlyText, "All items must have the same type.");
                     buttonObject = Instantiate(_itemPrefab_OnlyName, _itemsCollection);
                 }
 
-                buttonObject.gameObject.name = (item.name == "" ? item.name : item.sprite.name) + "Button";
+                buttonObject.gameObject.name = (item.Name != "" ? item.Name : item.Sprite.name) + "Button";
 
                 // Click action
                 Button button = buttonObject.GetComponent<Button>();
                 button.onClick.AddListener(() => {
-                    ButtonPressed(item.id);
+                    ButtonPressed(item.Id);
                 });
 
                 EventTrigger trigger = buttonObject.GetComponent<EventTrigger>();
@@ -64,12 +86,17 @@ namespace OptionSelectorUI.SelectorList {
                 trigger.triggers.Add(entry);
 
                 // TMP_Text text
-                if (item.name != "") {
+                if (_buttonType != ButtonType.OnlyImage) {
                     TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
-                    textObject.text = item.name;
+                    texts.Add(textObject);
+                    textObject.text = item.Name;
+
+                    if (textObject.fontSize < minTextSize) {
+                        minTextSize = textObject.fontSize;
+                    }
                 }
 
-                if (item.sprite != null) {
+                if (_buttonType != ButtonType.OnlyText) {
                     // Image sprite
                     Image imageObject = null;
 
@@ -82,15 +109,15 @@ namespace OptionSelectorUI.SelectorList {
 
                     Assert.IsNotNull(imageObject);
 
-                    imageObject.sprite = item.sprite;
+                    imageObject.sprite = item.Sprite;
 
                     // Image scale factor
-                    Vector2 spriteScaleFactor = new Vector2(item.sprite.bounds.extents.y / item.sprite.bounds.extents.x,
-                                                            item.sprite.bounds.extents.x / item.sprite.bounds.extents.y);
+                    Vector2 spriteScaleFactor = new Vector2(item.Sprite.bounds.extents.y / item.Sprite.bounds.extents.x,
+                                                            item.Sprite.bounds.extents.x / item.Sprite.bounds.extents.y);
                     Vector2 anchorMax = imageObject.GetComponent<RectTransform>().anchorMax;
                     Vector2 anchorMin = imageObject.GetComponent<RectTransform>().anchorMin;
-                    Vector2 imageScaleFactor = new Vector2(incrememtsPosY / (_selectorSize.x * (anchorMax.x - anchorMin.x)),
-                                                            (_selectorSize.x * (anchorMax.x - anchorMin.x)) / incrememtsPosY);
+                    Vector2 imageScaleFactor = new Vector2(incrementsPosY / (_selectorSize.x * (anchorMax.x - anchorMin.x)),
+                                                            (_selectorSize.x * (anchorMax.x - anchorMin.x)) / incrementsPosY);
 
                     imageObject.GetComponent<RectTransform>().localScale = new Vector3( 1f * Mathf.Clamp(imageScaleFactor.x * spriteScaleFactor.y , 0f, 1f),
                                                                                         1f * Mathf.Clamp(imageScaleFactor.y * spriteScaleFactor.x, 0f, 1f),
@@ -103,9 +130,14 @@ namespace OptionSelectorUI.SelectorList {
 
                 // Button size
                 RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrememtsPosY - 0.5f);
+                rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrementsPosY - 0.5f);
 
-                currentPos += new Vector2(0f, signs.y * (incrememtsPosY));
+                currentPos += new Vector2(0f, signs.y * (incrementsPosY));
+            }
+
+            // Resize text
+            foreach (var text in texts) {
+                text.fontSize = minTextSize;
             }
         }
     }

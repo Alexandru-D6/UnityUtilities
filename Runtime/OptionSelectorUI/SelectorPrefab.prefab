@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 8388613152190558165}
   - component: {fileID: 5278376211763845677}
   - component: {fileID: 9050171023670523618}
+  - component: {fileID: 7395077302836635533}
   m_Layer: 5
   m_Name: SelectorPrefab
   m_TagString: Untagged
@@ -137,3 +138,22 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7395077302836635533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8946956388275986355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fdd0ed074448ccbd407e23115396d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemsCollection: {fileID: 1093336389972729659}
+  _itemPrefab: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
+    type: 3}
+  _itemPrefab_OnlyImage: {fileID: 8317890916227388190, guid: 0fbb7d16a5c27cf46a4f86808623e915,
+    type: 3}
+  _itemPrefab_OnlyName: {fileID: 8317890916227388190, guid: 5c5ef3c3c359cfd478868a6b4496415d,
+    type: 3}
