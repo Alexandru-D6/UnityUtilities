@@ -20,6 +20,8 @@ namespace OptionSelectorUI.SelectorList {
         [SerializeField] private Transform _itemPrefab_OnlyImage;
         [SerializeField] private Transform _itemPrefab_OnlyName;
 
+        private float _textScaleFactor = 0.65f;
+
         private ButtonType _buttonType = ButtonType.Null;
 
         protected override void InitializeButtons() {
@@ -44,9 +46,6 @@ namespace OptionSelectorUI.SelectorList {
             } else {
                 _buttonType = ButtonType.OnlyText;
             }
-
-            List<TMP_Text> texts = new List<TMP_Text>();
-            float minTextSize = 1000f;
 
             foreach (var item in _items) {
                 Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
@@ -88,16 +87,18 @@ namespace OptionSelectorUI.SelectorList {
                 // TMP_Text text
                 if (_buttonType != ButtonType.OnlyImage) {
                     TMP_Text textObject = buttonObject.GetComponentInChildren<TMP_Text>();
-                    texts.Add(textObject);
                     textObject.text = item.Name;
 
-                    if (textObject.fontSize < minTextSize) {
-                        minTextSize = textObject.fontSize;
-                    }
+                    Vector2 anchorMax = textObject.GetComponent<RectTransform>().anchorMax;
+                    Vector2 anchorMin = textObject.GetComponent<RectTransform>().anchorMin;
+                    // The value 0.85f is a magic number that works for the default font size
+                    float textScaleFactor = (anchorMax.y - anchorMin.y) * 0.85f * _textScaleFactor;
+
+                    textObject.fontSize = incrementsPosY * textScaleFactor;
                 }
 
+                // Image sprite
                 if (_buttonType != ButtonType.OnlyText) {
-                    // Image sprite
                     Image imageObject = null;
 
                     foreach (var image in buttonObject.GetComponentsInChildren<Image>()) {
@@ -133,11 +134,6 @@ namespace OptionSelectorUI.SelectorList {
                 rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrementsPosY - 0.5f);
 
                 currentPos += new Vector2(0f, signs.y * (incrementsPosY));
-            }
-
-            // Resize text
-            foreach (var text in texts) {
-                text.fontSize = minTextSize;
             }
         }
     }

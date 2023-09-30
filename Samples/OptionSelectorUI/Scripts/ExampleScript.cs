@@ -36,7 +36,7 @@ namespace Samples.OptionSelectorUI.Scripts {
             OptionSelector<ItemSelectorList, Animals> result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelectorListWrapper>();
 
             List<ItemSelectorList> items = new List<ItemSelectorList> {
-                new(Animals.Elephant , "Animals.Elephant.ToString()", _sprites[0]),
+                new(Animals.Elephant , Animals.Elephant.ToString(), _sprites[0]),
                 new(Animals.Giraffe  , Animals.Giraffe.ToString() , _sprites[1]),
                 new(Animals.Pig      , Animals.Pig.ToString()     , _sprites[2]),
                 new(Animals.Monkey   , Animals.Monkey.ToString()  , _sprites[3])
