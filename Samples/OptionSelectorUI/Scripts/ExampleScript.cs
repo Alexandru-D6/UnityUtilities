@@ -39,6 +39,7 @@ namespace Samples.OptionSelectorUI.Scripts {
                 .WithCamera(_camera)
                 .WithDirection(new Vector2(1f, -1f))
                 .WithPosition(Input.mousePosition)
+                .WithSelectorSize(new Vector2(200f, 200f))
                 .WithEvent(OnPieceSelected)
                 .BuildSelectorList();
         }
