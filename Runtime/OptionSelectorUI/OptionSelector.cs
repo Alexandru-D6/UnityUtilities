@@ -31,6 +31,7 @@ namespace OptionSelectorUI {
             private Camera _camera;
             private Vector3 _position = Vector3.zero;
             private Vector2 _direction = new(1f, -1f);
+            private Vector2 _selectorSize = Vector2.zero;
             private EventHandler<OptionSelectorUtils.OnItemSelectedArgs> _callback;
             private bool _destroyOnButtonPressed;
             private bool _destroyOnMouseClick = true;
@@ -70,6 +71,11 @@ namespace OptionSelectorUI {
                 return this;
             }
 
+            public Builder WithSelectorSize(Vector2 size) {
+                _selectorSize = size;
+                return this;
+            }
+
             public Builder WithEvent(EventHandler<OptionSelectorUtils.OnItemSelectedArgs> callback) {
                 _callback = callback;
                 return this;
@@ -96,6 +102,7 @@ namespace OptionSelectorUI {
                 selectorList._camera = _camera;
                 selectorList._direction = _direction;
                 selectorList._position = _position;
+                selectorList._selectorSize = _selectorSize;
                 selectorList.OnItemSelected += _callback;
                 selectorList._destroyOnButtonPressed = _destroyOnButtonPressed;
                 selectorList._destroyOnMouseClick = _destroyOnMouseClick;
@@ -131,7 +138,9 @@ namespace OptionSelectorUI {
                     Destroy(prevSelector.gameObject);
                 }
 
-                _selectorSize = _parent.GetComponent<RectTransform>().sizeDelta;
+                if (_selectorSize == Vector2.zero) {
+                    _selectorSize = _parent.GetComponent<RectTransform>().sizeDelta;
+                }
             }
 
             // Config gameObject
