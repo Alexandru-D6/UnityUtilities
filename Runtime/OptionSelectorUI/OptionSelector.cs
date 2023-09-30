@@ -17,29 +17,21 @@ namespace OptionSelectorUI {
         protected bool _destroyOnButtonPressed = true;
         protected bool _destroyOnMouseClick = true;
 
-        [SerializeField] protected Transform _itemsCollection;
         [SerializeField] protected Transform _itemPrefab;
 
         private bool _initialized = false;
 
 #region Builder
         public class Builder {
-            private Transform _selectorPrefab;
             private Transform _itemPrefab;
             private string _name = "";
             private List<TItemObject> _items;
             private Transform _parent;
             private Camera _camera;
-            private Vector2 _size = new(175f, 160f);
             private Vector2 _direction = new(1f, 1f);
             private EventHandler<OptionSelectorUtils.OnItemSelectedArgs> _callback;
             private bool _destroyOnButtonPressed;
             private bool _destroyOnMouseClick = true;
-
-            public Builder WithSelectorPrefab(Transform prefab) {
-                _selectorPrefab = prefab;
-                return this;
-            }
 
             public Builder WithItemPrefab(Transform prefab) {
                 _itemPrefab = prefab;
@@ -66,11 +58,6 @@ namespace OptionSelectorUI {
                 return this;
             }
 
-            public Builder WithSize(Vector2 size) {
-                _size = size;
-                return this;
-            }
-
             public Builder WithDirection(Vector2 direction) {
                 _direction = direction;
                 return this;
@@ -92,21 +79,20 @@ namespace OptionSelectorUI {
             }
 
             public void BuildSelectorList() {
-                OptionSelectorList result = Instantiate(_selectorPrefab).gameObject.AddComponent<OptionSelectorList>();
+                GameObject gameObject = new GameObject().AddComponent<RectTransform>().gameObject;
+                OptionSelectorList selectorList = gameObject.AddComponent<OptionSelectorList>();
 
-                result._itemsCollection = result.transform.Find("ItemsCollection");
-                result._itemPrefab = _itemPrefab;
-                result._selectorId = _name;
-                result._parent = _parent;
-                result._items = _items as List<ItemSelectorList>;
-                result._camera = _camera;
-                result._selectorSize = _size;
-                result._direction = _direction;
-                result.OnItemSelected += _callback;
+                selectorList._itemPrefab = _itemPrefab;
+                selectorList._selectorId = _name;
+                selectorList._parent = _parent;
+                selectorList._items = _items as List<ItemSelectorList>;
+                selectorList._camera = _camera;
+                selectorList._direction = _direction;
+                selectorList.OnItemSelected += _callback;
 
-                result.Initialize();
-                result._destroyOnButtonPressed = _destroyOnButtonPressed;
-                result._destroyOnMouseClick = _destroyOnMouseClick;
+                selectorList.Initialize();
+                selectorList._destroyOnButtonPressed = _destroyOnButtonPressed;
+                selectorList._destroyOnMouseClick = _destroyOnMouseClick;
             }
         }
 
@@ -136,6 +122,9 @@ namespace OptionSelectorUI {
                 if (prevSelector != null) {
                     Destroy(prevSelector.gameObject);
                 }
+
+                Rect parentRect = _parent.GetComponent<RectTransform>().rect;
+                _selectorSize = new Vector2(parentRect.width, parentRect.height);
             }
 
             // Config gameObject
@@ -144,7 +133,7 @@ namespace OptionSelectorUI {
 
             // Initialize selector
             InitializeButtons();
-            _itemsCollection.position = Input.mousePosition;
+            transform.position = Input.mousePosition;
 
             _initialized = true;
         }

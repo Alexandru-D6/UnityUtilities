@@ -34,7 +34,7 @@ namespace OptionSelectorUI.SelectorList {
                 (signs.y < 0f) ? 0f : incrementsPosY
             );
 
-            _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
+            transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
             // Define button type
             if (_items[0].Name != "" && _items[0].Sprite != null) {
@@ -58,7 +58,7 @@ namespace OptionSelectorUI.SelectorList {
             foreach (var item in _items) {
                 Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
 
-                Transform buttonObject = Instantiate(_itemPrefab, _itemsCollection);
+                Transform buttonObject = Instantiate(_itemPrefab, transform);
 
                 if (item.Name != "" && item.Sprite != null) {
                     Assert.IsFalse(_buttonType != ButtonType.ImageAndText, "All items must have the same type.");
