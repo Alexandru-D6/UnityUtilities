@@ -30,7 +30,7 @@ namespace OptionSelectorUI {
             private Transform _parent;
             private Camera _camera;
             private Vector3 _position = Vector3.zero;
-            private Vector2 _direction = new(1f, 1f);
+            private Vector2 _direction = new(1f, -1f);
             private EventHandler<OptionSelectorUtils.OnItemSelectedArgs> _callback;
             private bool _destroyOnButtonPressed;
             private bool _destroyOnMouseClick = true;

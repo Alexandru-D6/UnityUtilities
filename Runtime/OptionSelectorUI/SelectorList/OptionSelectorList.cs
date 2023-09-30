@@ -24,15 +24,24 @@ namespace OptionSelectorUI.SelectorList {
         protected override void InitializeButtons() {
             float incrementsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
 
+            // The position (0,0,0) is the bottom left corner of the screen
             Vector2 signs = new Vector2(
-                ((Input.mousePosition.x + _selectorSize.x > _camera.pixelWidth) ? -1f : 1f),
-                ((Input.mousePosition.y - (_items.Count * (incrementsPosY + 0.5f))  > 0f) ? -1f : 1f)
+                (_direction.x < 0f) ?
+                    (transform.position.x - _selectorSize.x <= 0f ? 1f : _direction.x) :
+                    (transform.position.x + _selectorSize.x >= _camera.pixelWidth ? -1f : _direction.x),
+                (_direction.y > 0f) ?
+                    (transform.position.y + _selectorSize.y >= _camera.pixelHeight ? -1f : _direction.y) :
+                    (transform.position.y - _selectorSize.y <= 0f ? 1f : _direction.y)
             );
 
             Vector2 currentPos = new Vector2(
-                (signs.x < 0f) ? -1f * _selectorSize.x : 0f,
-                (signs.y < 0f) ? 0f : incrementsPosY
-            );
+                (_direction.x > 0f) ?
+                    0f :
+                    -1f * _selectorSize.x,
+                (_direction.y > 0f) ?
+                    _selectorSize.y :
+                    0f
+                );
 
             // Define button type
             if (_items[0].Name != "" && _items[0].Sprite != null) {
@@ -53,10 +62,13 @@ namespace OptionSelectorUI.SelectorList {
                 Assert.IsNotNull(_itemPrefab.GetComponentInChildren<TMP_Text>());
             }
 
+            List<Transform> buttons = new List<Transform>();
+
             foreach (var item in _items) {
                 Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
 
                 Transform buttonObject = Instantiate(_itemPrefab, transform);
+                buttons.Add(buttonObject);
 
                 if (item.Name != "" && item.Sprite != null) {
                     Assert.IsFalse(_buttonType != ButtonType.ImageAndText, "All items must have the same type.");
@@ -129,14 +141,24 @@ namespace OptionSelectorUI.SelectorList {
                 }
 
                 // GameObject position
-                Vector3 backupPos = buttonObject.localPosition;
-                buttonObject.localPosition = new Vector3(currentPos.x, currentPos.y, backupPos.z);
+                buttonObject.localPosition = new Vector3(currentPos.x, currentPos.y, 0f);
 
                 // Button size
                 RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrementsPosY - 0.5f);
 
-                currentPos += new Vector2(0f, signs.y * (incrementsPosY));
+                currentPos -= new Vector2(0f, incrementsPosY);
+            }
+
+            foreach (var button in buttons) {
+                button.localPosition += new Vector3(
+                    (int)_direction.x != (int)signs.x ?
+                        signs.x * _selectorSize.x :
+                        0f,
+                    (int)_direction.y != (int)signs.y ?
+                        signs.y * _selectorSize.y :
+                        0f,
+                    0f);
             }
         }
     }

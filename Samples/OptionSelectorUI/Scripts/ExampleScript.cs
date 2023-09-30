@@ -37,6 +37,7 @@ namespace Samples.OptionSelectorUI.Scripts {
                 .WithName("Animals Selector")
                 .WithItems(items)
                 .WithCamera(_camera)
+                .WithDirection(new Vector2(1f, -1f))
                 .WithPosition(Input.mousePosition)
                 .WithEvent(OnPieceSelected)
                 .BuildSelectorList();
