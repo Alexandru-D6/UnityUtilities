@@ -8,7 +8,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI.SelectorList {
 
-    public class OptionSelectorList<TItemType> : OptionSelector<ItemSelectorList<TItemType>, TItemType> {
+    public class OptionSelectorList : OptionSelector<ItemSelectorList> {
 
         private enum ButtonType {
             ImageAndText,
@@ -16,9 +16,6 @@ namespace OptionSelectorUI.SelectorList {
             OnlyText,
             Null
         }
-
-        [SerializeField] private Transform _itemPrefab_OnlyImage;
-        [SerializeField] private Transform _itemPrefab_OnlyName;
 
         private float _textScaleFactor = 0.65f;
 
@@ -39,6 +36,7 @@ namespace OptionSelectorUI.SelectorList {
 
             _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
 
+            // Define button type
             if (_items[0].Name != "" && _items[0].Sprite != null) {
                 _buttonType = ButtonType.ImageAndText;
             } else if (_items[0].Name == "") {
@@ -47,20 +45,27 @@ namespace OptionSelectorUI.SelectorList {
                 _buttonType = ButtonType.OnlyText;
             }
 
+            // Check prefab to have all game objects
+            Assert.IsNotNull(_itemPrefab);
+            Assert.IsNotNull(_itemPrefab.GetComponent<Button>());
+            if (_buttonType != ButtonType.OnlyText) {
+                Assert.IsTrue(_itemPrefab.GetComponentsInChildren<Image>().Length > 1);
+            }
+            if (_buttonType != ButtonType.OnlyImage) {
+                Assert.IsNotNull(_itemPrefab.GetComponentInChildren<TMP_Text>());
+            }
+
             foreach (var item in _items) {
                 Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
 
-                Transform buttonObject;
+                Transform buttonObject = Instantiate(_itemPrefab, _itemsCollection);
 
                 if (item.Name != "" && item.Sprite != null) {
                     Assert.IsFalse(_buttonType != ButtonType.ImageAndText, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab, _itemsCollection);
                 } else if (item.Name == "") {
                     Assert.IsFalse(_buttonType != ButtonType.OnlyImage, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab_OnlyImage, _itemsCollection);
                 } else {
                     Assert.IsFalse(_buttonType != ButtonType.OnlyText, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab_OnlyName, _itemsCollection);
                 }
 
                 buttonObject.gameObject.name = (item.Name != "" ? item.Name : item.Sprite.name) + "Button";

@@ -353,7 +353,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d758b6b3e2ce43a4f91ff2856f096509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectorUIPrefab: {fileID: 3068787803114839767, guid: e6c3f2486ad23314f83715fd2e362a82,
+  _selectorUIPrefab: {fileID: 1393963926711493431, guid: 06f4c103d28566c46b59b8030a508ef7,
+    type: 3}
+  _buttonUIPrefab: {fileID: 8317890916227388190, guid: 0d9e693d5a9f6fa4ab6087cf64e0b9fd,
     type: 3}
   _canvas: {fileID: 1605651405}
   _sprites:
