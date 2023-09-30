@@ -1,12 +1,8 @@
-#region Using Directives
-
 using System.Collections.Generic;
 using OptionSelectorUI;
 using OptionSelectorUI.SelectorList;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-#endregion
 
 namespace Samples.OptionSelectorUI.Scripts {
     public class ExampleScript : MonoBehaviour {
@@ -41,6 +37,7 @@ namespace Samples.OptionSelectorUI.Scripts {
                 .WithName("Animals Selector")
                 .WithItems(items)
                 .WithCamera(_camera)
+                .WithPosition(Input.mousePosition)
                 .WithEvent(OnPieceSelected)
                 .BuildSelectorList();
         }

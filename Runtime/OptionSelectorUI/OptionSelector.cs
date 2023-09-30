@@ -11,8 +11,9 @@ namespace OptionSelectorUI {
         protected string _selectorId;
         protected List<TItemObject> _items;
         protected Transform _parent;
-        protected Vector2 _selectorSize;
+        protected Vector2 _selectorSize = new(100f, 100f);
         protected Vector2 _direction;
+        protected Vector3 _position;
         protected Camera _camera;
         protected bool _destroyOnButtonPressed = true;
         protected bool _destroyOnMouseClick = true;
@@ -28,6 +29,7 @@ namespace OptionSelectorUI {
             private List<TItemObject> _items;
             private Transform _parent;
             private Camera _camera;
+            private Vector3 _position = Vector3.zero;
             private Vector2 _direction = new(1f, 1f);
             private EventHandler<OptionSelectorUtils.OnItemSelectedArgs> _callback;
             private bool _destroyOnButtonPressed;
@@ -58,6 +60,11 @@ namespace OptionSelectorUI {
                 return this;
             }
 
+            public Builder WithPosition(Vector2 position) {
+                _position = position;
+                return this;
+            }
+
             public Builder WithDirection(Vector2 direction) {
                 _direction = direction;
                 return this;
@@ -79,7 +86,7 @@ namespace OptionSelectorUI {
             }
 
             public void BuildSelectorList() {
-                GameObject gameObject = new GameObject().AddComponent<RectTransform>().gameObject;
+                GameObject gameObject = new GameObject(_name, typeof(RectTransform));
                 OptionSelectorList selectorList = gameObject.AddComponent<OptionSelectorList>();
 
                 selectorList._itemPrefab = _itemPrefab;
@@ -88,11 +95,12 @@ namespace OptionSelectorUI {
                 selectorList._items = _items as List<ItemSelectorList>;
                 selectorList._camera = _camera;
                 selectorList._direction = _direction;
+                selectorList._position = _position;
                 selectorList.OnItemSelected += _callback;
-
-                selectorList.Initialize();
                 selectorList._destroyOnButtonPressed = _destroyOnButtonPressed;
                 selectorList._destroyOnMouseClick = _destroyOnMouseClick;
+
+                selectorList.Initialize();
             }
         }
 
@@ -123,17 +131,26 @@ namespace OptionSelectorUI {
                     Destroy(prevSelector.gameObject);
                 }
 
-                Rect parentRect = _parent.GetComponent<RectTransform>().rect;
-                _selectorSize = new Vector2(parentRect.width, parentRect.height);
+                _selectorSize = _parent.GetComponent<RectTransform>().sizeDelta;
             }
 
             // Config gameObject
             gameObject.name = _selectorId;
             transform.SetParent(_parent, true);
+            RectTransform rectTransform = transform.GetComponent<RectTransform>();
+            rectTransform.sizeDelta  = _selectorSize;
+            rectTransform.pivot      = new Vector2(0, 1);
+            rectTransform.anchorMin  = new Vector2(0, 1);
+            rectTransform.anchorMax  = new Vector2(0, 1);
+
+            if (_position != Vector3.zero) {
+                rectTransform.position = _position;
+            } else {
+                rectTransform.localPosition = Vector3.zero;
+            }
 
             // Initialize selector
             InitializeButtons();
-            transform.position = Input.mousePosition;
 
             _initialized = true;
         }

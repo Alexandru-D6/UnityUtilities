@@ -34,8 +34,6 @@ namespace OptionSelectorUI.SelectorList {
                 (signs.y < 0f) ? 0f : incrementsPosY
             );
 
-            transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
-
             // Define button type
             if (_items[0].Name != "" && _items[0].Sprite != null) {
                 _buttonType = ButtonType.ImageAndText;
