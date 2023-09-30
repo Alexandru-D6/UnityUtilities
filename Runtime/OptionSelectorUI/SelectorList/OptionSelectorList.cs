@@ -8,7 +8,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace OptionSelectorUI.SelectorList {
 
-    public class OptionSelectorList<TItemType> : OptionSelector<ItemSelectorList<TItemType>, TItemType> {
+    public class OptionSelectorList : OptionSelector<ItemSelectorList> {
 
         private enum ButtonType {
             ImageAndText,
@@ -17,9 +17,6 @@ namespace OptionSelectorUI.SelectorList {
             Null
         }
 
-        [SerializeField] private Transform _itemPrefab_OnlyImage;
-        [SerializeField] private Transform _itemPrefab_OnlyName;
-
         private float _textScaleFactor = 0.65f;
 
         private ButtonType _buttonType = ButtonType.Null;
@@ -27,18 +24,26 @@ namespace OptionSelectorUI.SelectorList {
         protected override void InitializeButtons() {
             float incrementsPosY = Mathf.Floor(_selectorSize.y / _items.Count);
 
+            // The position (0,0,0) is the bottom left corner of the screen
             Vector2 signs = new Vector2(
-                ((Input.mousePosition.x + _selectorSize.x > _camera.pixelWidth) ? -1f : 1f),
-                ((Input.mousePosition.y - (_items.Count * (incrementsPosY + 0.5f))  > 0f) ? -1f : 1f)
+                (_direction.x < 0f) ?
+                    (transform.position.x - _selectorSize.x <= 0f ? 1f : _direction.x) :
+                    (transform.position.x + _selectorSize.x >= _camera.pixelWidth ? -1f : _direction.x),
+                (_direction.y > 0f) ?
+                    (transform.position.y + _selectorSize.y >= _camera.pixelHeight ? -1f : _direction.y) :
+                    (transform.position.y - _selectorSize.y <= 0f ? 1f : _direction.y)
             );
 
             Vector2 currentPos = new Vector2(
-                (signs.x < 0f) ? -1f * _selectorSize.x : 0f,
-                (signs.y < 0f) ? 0f : incrementsPosY
-            );
+                (_direction.x > 0f) ?
+                    0f :
+                    -1f * _selectorSize.x,
+                (_direction.y > 0f) ?
+                    _selectorSize.y :
+                    0f
+                );
 
-            _itemsCollection.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, signs.y > 0f ? 0f : 1f);
-
+            // Define button type
             if (_items[0].Name != "" && _items[0].Sprite != null) {
                 _buttonType = ButtonType.ImageAndText;
             } else if (_items[0].Name == "") {
@@ -47,20 +52,30 @@ namespace OptionSelectorUI.SelectorList {
                 _buttonType = ButtonType.OnlyText;
             }
 
+            // Check prefab to have all game objects
+            Assert.IsNotNull(_itemPrefab);
+            Assert.IsNotNull(_itemPrefab.GetComponent<Button>());
+            if (_buttonType != ButtonType.OnlyText) {
+                Assert.IsTrue(_itemPrefab.GetComponentsInChildren<Image>().Length > 1);
+            }
+            if (_buttonType != ButtonType.OnlyImage) {
+                Assert.IsNotNull(_itemPrefab.GetComponentInChildren<TMP_Text>());
+            }
+
+            List<Transform> buttons = new List<Transform>();
+
             foreach (var item in _items) {
                 Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
 
-                Transform buttonObject;
+                Transform buttonObject = Instantiate(_itemPrefab, transform);
+                buttons.Add(buttonObject);
 
                 if (item.Name != "" && item.Sprite != null) {
                     Assert.IsFalse(_buttonType != ButtonType.ImageAndText, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab, _itemsCollection);
                 } else if (item.Name == "") {
                     Assert.IsFalse(_buttonType != ButtonType.OnlyImage, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab_OnlyImage, _itemsCollection);
                 } else {
                     Assert.IsFalse(_buttonType != ButtonType.OnlyText, "All items must have the same type.");
-                    buttonObject = Instantiate(_itemPrefab_OnlyName, _itemsCollection);
                 }
 
                 buttonObject.gameObject.name = (item.Name != "" ? item.Name : item.Sprite.name) + "Button";
@@ -126,14 +141,24 @@ namespace OptionSelectorUI.SelectorList {
                 }
 
                 // GameObject position
-                Vector3 backupPos = buttonObject.localPosition;
-                buttonObject.localPosition = new Vector3(currentPos.x, currentPos.y, backupPos.z);
+                buttonObject.localPosition = new Vector3(currentPos.x, currentPos.y, 0f);
 
                 // Button size
                 RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
                 rectTransform.sizeDelta = new Vector2(_selectorSize.x, incrementsPosY - 0.5f);
 
-                currentPos += new Vector2(0f, signs.y * (incrementsPosY));
+                currentPos -= new Vector2(0f, incrementsPosY);
+            }
+
+            foreach (var button in buttons) {
+                button.localPosition += new Vector3(
+                    (int)_direction.x != (int)signs.x ?
+                        signs.x * _selectorSize.x :
+                        0f,
+                    (int)_direction.y != (int)signs.y ?
+                        signs.y * _selectorSize.y :
+                        0f,
+                    0f);
             }
         }
     }

@@ -3,8 +3,8 @@ using System;
 namespace OptionSelectorUI {
 
     public class OptionSelectorUtils {
-        public class OnItemSelectedArgs<T> : EventArgs {
-            public T Id;
+        public class OnItemSelectedArgs : EventArgs {
+            public int Id;
         }
     }
 }

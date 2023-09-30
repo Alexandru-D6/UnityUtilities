@@ -1,13 +1,13 @@
 using UnityEngine;
 
 namespace OptionSelectorUI.SelectorList {
-    public struct ItemSelectorList<T> {
-        public readonly T Id;
+    public struct ItemSelectorList {
+        public readonly int Id;
         public readonly string Name;
         public readonly Sprite Sprite;
 
-        public ItemSelectorList(T id, string name, Sprite sprite) {
-            if (id == null) {
+        public ItemSelectorList(int id, string name, Sprite sprite) {
+            if (id < 0) {
                 throw new System.ArgumentException("Id must be greater than 0");
             }
 

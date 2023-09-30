@@ -1,25 +1,16 @@
-#region Using Directives
-
 using System.Collections.Generic;
 using OptionSelectorUI;
+using OptionSelectorUI.SelectorList;
 using UnityEngine;
 using UnityEngine.UIElements;
-
-// Pseudo defines (Do after any using directive to be able to use others structs)
-using ItemSelectorList = OptionSelectorUI.SelectorList.ItemSelectorList<Samples.OptionSelectorUI.Scripts.Animals>;
-
-#endregion
 
 namespace Samples.OptionSelectorUI.Scripts {
     public class ExampleScript : MonoBehaviour {
 
-
-        [SerializeField] private Transform _selectorUIPrefab;
-        [SerializeField] private Transform _canvas;
+        [SerializeField] private Transform _animalSelectorList;
+        [SerializeField] private Transform _buttonUIPrefab;
 
         [SerializeField] private List<Sprite> _sprites;
-        [SerializeField] private Vector2 _selectorSize = new(160f, 120f);
-
 
         private Camera _camera;
         void Start() {
@@ -33,21 +24,26 @@ namespace Samples.OptionSelectorUI.Scripts {
         }
 
         private void InstantiateSelectorList() {
-            OptionSelector<ItemSelectorList, Animals> result = Instantiate(_selectorUIPrefab).GetComponentInChildren<OptionSelectorListWrapper>();
-
             List<ItemSelectorList> items = new List<ItemSelectorList> {
-                new(Animals.Elephant , Animals.Elephant.ToString(), _sprites[0]),
-                new(Animals.Giraffe  , Animals.Giraffe.ToString() , _sprites[1]),
-                new(Animals.Pig      , Animals.Pig.ToString()     , _sprites[2]),
-                new(Animals.Monkey   , Animals.Monkey.ToString()  , _sprites[3])
+                new((int)Animals.Elephant , Animals.Elephant.ToString(), _sprites[0]),
+                new((int)Animals.Giraffe  , Animals.Giraffe.ToString() , _sprites[1]),
+                new((int)Animals.Pig      , Animals.Pig.ToString()     , _sprites[2]),
+                new((int)Animals.Monkey   , Animals.Monkey.ToString()  , _sprites[3])
             };
 
-            result.Initialize("Piece Promotion Selector", items, _canvas, _camera, _selectorSize, new Vector2(1f, -1f));
-            result.SetDestroyOnButtonPressed(false);
-            result.OnItemSelected += OnPieceSelected;
+            new OptionSelector<ItemSelectorList>.Builder()
+                .WithParent(_animalSelectorList)
+                .WithItemPrefab(_buttonUIPrefab)
+                .WithName("Animals Selector")
+                .WithItems(items)
+                .WithCamera(_camera)
+                .WithDirection(new Vector2(1f, -1f))
+                .WithPosition(Input.mousePosition)
+                .WithEvent(OnPieceSelected)
+                .BuildSelectorList();
         }
 
-        private void OnPieceSelected(object sender, OptionSelectorUtils.OnItemSelectedArgs<Animals> e) {
+        private void OnPieceSelected(object sender, OptionSelectorUtils.OnItemSelectedArgs e) {
             Debug.Log("Selected piece: " + e.Id);
         }
     }
