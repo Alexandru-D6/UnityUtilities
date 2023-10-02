@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using OptionSelectorUI.SelectorList;
+using ButtonMenuUI.MenuList;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace OptionSelectorUI {
+namespace ButtonMenuUI {
 
-    public abstract class OptionSelector<TItemObject> : MonoBehaviour {
+    public abstract class ButtonMenuBase : MonoBehaviour {
 
         protected string _selectorId;
-        protected List<TItemObject> _items;
+        protected List<IMenuItem> _items;
         protected Transform _parent;
         protected Vector2 _selectorSize = new(100f, 100f);
         protected Vector2 _direction;
@@ -26,13 +26,13 @@ namespace OptionSelectorUI {
         public class Builder {
             private Transform _itemPrefab;
             private string _name = "";
-            private List<TItemObject> _items;
+            private List<IMenuItem> _items;
             private Transform _parent;
             private Camera _camera;
             private Vector3 _position = Vector3.zero;
             private Vector2 _direction = new(1f, -1f);
             private Vector2 _selectorSize = Vector2.zero;
-            private EventHandler<OptionSelectorUtils.OnItemSelectedArgs> _callback;
+            private EventHandler<ButtonMenuUtils.OnItemPressedArgs> _callback;
             private bool _destroyOnButtonPressed;
             private bool _destroyOnMouseClick = true;
 
@@ -46,7 +46,7 @@ namespace OptionSelectorUI {
                 return this;
             }
 
-            public Builder WithItems(List<TItemObject> items) {
+            public Builder WithItems(List<IMenuItem> items) {
                 _items = items;
                 return this;
             }
@@ -76,7 +76,7 @@ namespace OptionSelectorUI {
                 return this;
             }
 
-            public Builder WithEvent(EventHandler<OptionSelectorUtils.OnItemSelectedArgs> callback) {
+            public Builder WithEvent(EventHandler<ButtonMenuUtils.OnItemPressedArgs> callback) {
                 _callback = callback;
                 return this;
             }
@@ -93,12 +93,12 @@ namespace OptionSelectorUI {
 
             public void BuildSelectorList() {
                 GameObject gameObject = new GameObject(_name, typeof(RectTransform));
-                OptionSelectorList selectorList = gameObject.AddComponent<OptionSelectorList>();
+                ButtonMenuBase selectorList = gameObject.AddComponent<SelectionMenuList>();
 
                 selectorList._itemPrefab = _itemPrefab;
                 selectorList._selectorId = _name;
                 selectorList._parent = _parent;
-                selectorList._items = _items as List<ItemSelectorList>;
+                selectorList._items = _items;
                 selectorList._camera = _camera;
                 selectorList._direction = _direction;
                 selectorList._position = _position;
@@ -115,11 +115,11 @@ namespace OptionSelectorUI {
 
 #region Callback function
 
-        public event EventHandler<OptionSelectorUtils.OnItemSelectedArgs> OnItemSelected;
+        public event EventHandler<ButtonMenuUtils.OnItemPressedArgs> OnItemSelected;
 
-        public void ButtonPressed(int id) {
-            OnItemSelected?.Invoke(this, new OptionSelectorUtils.OnItemSelectedArgs {
-                Id = id
+        public void ButtonPressed(IMenuItem item) {
+            OnItemSelected?.Invoke(this, new ButtonMenuUtils.OnItemPressedArgs {
+                Item = item
             });
 
             if (_destroyOnButtonPressed) {
@@ -176,8 +176,8 @@ namespace OptionSelectorUI {
 
         private void Update() {
             if (_initialized && _destroyOnMouseClick && Input.GetMouseButtonUp((int) MouseButton.LeftMouse)) {
-                OnItemSelected?.Invoke(this, new OptionSelectorUtils.OnItemSelectedArgs {
-                    Id = -1
+                OnItemSelected?.Invoke(this, new ButtonMenuUtils.OnItemPressedArgs {
+                    Item = null
                 });
 
                 Destroy(gameObject);

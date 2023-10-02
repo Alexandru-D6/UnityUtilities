@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
 
-namespace OptionSelectorUI.SelectorList {
+namespace ButtonMenuUI.MenuList {
 
-    public class OptionSelectorList : OptionSelector<ItemSelectorList> {
+    public class SelectionMenuList : ButtonMenuBase {
 
         private enum ButtonType {
             ImageAndText,
@@ -65,7 +65,7 @@ namespace OptionSelectorUI.SelectorList {
             List<Transform> buttons = new List<Transform>();
 
             foreach (var item in _items) {
-                Assert.IsFalse(item.Id == null || (item.Name == "" && item.Sprite == null));
+                Assert.IsFalse(item == null || (item.Name == "" && item.Sprite == null));
 
                 Transform buttonObject = Instantiate(_itemPrefab, transform);
                 buttons.Add(buttonObject);
@@ -83,7 +83,7 @@ namespace OptionSelectorUI.SelectorList {
                 // Click action
                 Button button = buttonObject.GetComponent<Button>();
                 button.onClick.AddListener(() => {
-                    ButtonPressed(item.Id);
+                    ButtonPressed(item);
                 });
 
                 EventTrigger trigger = buttonObject.GetComponent<EventTrigger>();
