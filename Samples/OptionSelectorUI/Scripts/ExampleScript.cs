@@ -60,6 +60,8 @@ namespace Samples.OptionSelectorUI.Scripts {
 
         [SerializeField] private List<Sprite> _sprites;
 
+        [SerializeField] private Vector2 _selectorSize = new(1f, 1f);
+
         private Camera _camera;
         void Start() {
             _camera = Camera.main;
@@ -98,8 +100,9 @@ namespace Samples.OptionSelectorUI.Scripts {
                 .WithCamera(_camera)
                 .WithDirection(new Vector2(1f, -1f))
                 .WithPosition(Input.mousePosition)
-                .WithSelectorSize(new Vector2(200f, 200f))
+                .WithSelectorSize(_selectorSize)
                 .WithEvent(OnPieceSelected)
+                .WithConstantScale(true)
                 .BuildSelectorList();
         }
 

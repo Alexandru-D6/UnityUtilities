@@ -8,33 +8,43 @@ namespace ButtonMenuUI {
 
     public abstract class ButtonMenuBase : MonoBehaviour {
 
+        [SerializeField] protected Transform _itemPrefab;
+        protected Transform _parent;
+        protected Camera _camera;
+
         protected string _selectorId;
         protected List<IMenuItem> _items;
-        protected Transform _parent;
-        protected Vector2 _selectorSize = new(100f, 100f);
-        protected Vector2 _direction;
-        protected Vector3 _position;
-        protected Camera _camera;
+
+        protected bool _constantScale = true;
         protected bool _destroyOnButtonPressed = true;
         protected bool _destroyOnMouseClick = true;
 
-        [SerializeField] protected Transform _itemPrefab;
+        protected Vector3 _position;
+        protected Vector2 _direction;
+        protected Vector2 _selectorSize;
 
         private bool _initialized = false;
+
+        protected Vector2 DEFAULT_SELECTOR_SIZE = new(100f, 100f);
 
 #region Builder
         public class Builder {
             private Transform _itemPrefab;
-            private string _name = "";
-            private List<IMenuItem> _items;
             private Transform _parent;
             private Camera _camera;
+
+            private string _name = "";
+            private List<IMenuItem> _items;
+
+            private bool _constantScale = true;
+            private bool _destroyOnButtonPressed;
+            private bool _destroyOnMouseClick = true;
+
             private Vector3 _position = Vector3.zero;
             private Vector2 _direction = new(1f, -1f);
             private Vector2 _selectorSize = Vector2.zero;
+
             private EventHandler<ButtonMenuUtils.OnItemPressedArgs> _callback;
-            private bool _destroyOnButtonPressed;
-            private bool _destroyOnMouseClick = true;
 
             public Builder WithItemPrefab(Transform prefab) {
                 _itemPrefab = prefab;
@@ -81,6 +91,11 @@ namespace ButtonMenuUI {
                 return this;
             }
 
+            public Builder WithConstantScale(bool constantScale) {
+                _constantScale = constantScale;
+                return this;
+            }
+
             public Builder WithDestroyOnButtonPressed(bool destroy) {
                 _destroyOnButtonPressed = destroy;
                 return this;
@@ -104,6 +119,7 @@ namespace ButtonMenuUI {
                 selectorList._position = _position;
                 selectorList._selectorSize = _selectorSize;
                 selectorList.OnItemSelected += _callback;
+                selectorList._constantScale = _constantScale;
                 selectorList._destroyOnButtonPressed = _destroyOnButtonPressed;
                 selectorList._destroyOnMouseClick = _destroyOnMouseClick;
 
@@ -145,9 +161,9 @@ namespace ButtonMenuUI {
 
             // Config gameObject
             gameObject.name = _selectorId;
-            transform.SetParent(_parent, true);
+            transform.SetParent(_parent, !_constantScale);
             RectTransform rectTransform = transform.GetComponent<RectTransform>();
-            rectTransform.sizeDelta  = _selectorSize;
+            rectTransform.sizeDelta  = DEFAULT_SELECTOR_SIZE * _selectorSize;
             rectTransform.pivot      = new Vector2(0, 1);
             rectTransform.anchorMin  = new Vector2(0, 1);
             rectTransform.anchorMax  = new Vector2(0, 1);
