@@ -1,4 +1,5 @@
 using Grid;
+using Unity.Mathematics;
 using UnityEngine;
 using Utils;
 
@@ -9,8 +10,8 @@ namespace Samples.PrimitiveInventory.Scripts {
         [SerializeField] private Transform cellPrefab;
         [SerializeField] private Transform hollowCell;
 
-        private Cell _currentCell;
-        [SerializeField] private Vector3Int gridSize = new Vector3Int(8, 1, 8);
+        [SerializeField] public Cell _currentCell;
+        [SerializeField] private int3 gridSize = new int3(8, 1, 8);
         [SerializeField] private float cellSize = 1.0f;
         [SerializeField] private bool snappingToGrid = false;
 
@@ -23,18 +24,20 @@ namespace Samples.PrimitiveInventory.Scripts {
         void Start() {
             _inventory = new GridSystem<Cell>(gridSize, cellSize, transform.position, () => { return null; });
 #if UNITY_EDITOR
-            _inventory.SetDebug(true);
+            _inventory.SetDebug(false);
 #endif // UNITY_EDITOR
             _inventory.OnGridValueChanged += OnCellChanged;
 
             for (int i = 0; i < _inventory.GetLength(0); ++i) {
                 Transform cellObject = Instantiate(cellPrefab, transform, false);
+                cellObject.localScale = new Vector3(cellSize, cellSize, cellSize);
+                cellObject.localPosition = new Vector3(i, 0, 0) * cellSize;
 
-                Cell cell = new Cell(i, 0, cellSize, true);
-                cell.SetGameObject(cellObject);
-                cell.SetPosition(new Vector2Int(i,0));
+                int3 position = new int3(i, 0, 0);
+                Cell cell = new Cell(position, cellSize, true);
+                cell.SetObject(cellObject);
 
-                _inventory.SetObject(new Vector3Int(i,0,0), cell);
+                _inventory.SetObject(position, cell);
             }
         }
 
@@ -44,20 +47,19 @@ namespace Samples.PrimitiveInventory.Scripts {
 
                 _currentCell = _inventory.GetObject(mouse);
                 if (_currentCell != null) {
-                    _currentCell.SetActiveObject(false);
-                    _inventory.SetObject(new Vector3Int(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), null);
+                    ((Transform) _currentCell.GetObject()).gameObject.SetActive(false);
+                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), null);
                     hollowCell.gameObject.SetActive(true);
                 }
 
             }else if (Input.GetMouseButtonUp(0) && _currentCell != null) {
                 Vector3 mouse = UtilsClass.GetMouseWorldPositionOverPlane(_camera, GetGridPlane(0.0f));
 
-                Vector2Int lastCellPosition = _currentCell.GetPosition();
                 if (!_inventory.SetObject(mouse, _currentCell)) {
-                    _inventory.SetObject(new Vector3Int(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), _currentCell);
+                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), _currentCell);
                 }
 
-                _currentCell.SetActiveObject(true);
+                ((Transform) _currentCell.GetObject()).gameObject.SetActive(true);
                 _currentCell = null;
                 hollowCell.gameObject.SetActive(false);
             }
@@ -81,8 +83,10 @@ namespace Samples.PrimitiveInventory.Scripts {
             return new Plane(new Vector3(0.0f,1.0f,0.0f), new Vector3(0.0f,transform.position.y + offset,0.0f));
         }
 
-        private void OnCellChanged(Vector3Int position, Cell cell, bool activeAction) {
-            cell.SetPosition(new Vector2Int(position.x, position.z));
+        private void OnCellChanged(int3 position, Cell cell, bool activeAction) {
+            cell.SetPosition(position);
+            Transform cellObject = (Transform) cell.GetObject();
+            cellObject.localPosition = new Vector3(position.x, 0, position.z) * cellSize;
         }
     }
 }

@@ -2,7 +2,8 @@
     "name": "PrimitiveInventory",
     "rootNamespace": "",
     "references": [
-        "GUID:856a11d7213f3594fa1643e0b27c56eb"
+        "GUID:856a11d7213f3594fa1643e0b27c56eb",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
