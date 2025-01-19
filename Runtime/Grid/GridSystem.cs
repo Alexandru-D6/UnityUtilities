@@ -103,8 +103,8 @@ namespace Grid {
             if (OnGridValueChanged != null && value != null) OnGridValueChanged(position, value, activeAction);
 
 #if UNITY_EDITOR
-            if (_debug && value != null) {
-                _debugTextArray[position.x, position.y, position.z].text = value.ToString();
+            if (_debug) {
+                _debugTextArray[position.x, position.y, position.z].text = (value != null) ? value.ToString() : "";
             }
 #endif // UNITY_EDITOR
 

@@ -42,21 +42,23 @@ namespace Samples.PrimitiveInventory.Scripts {
         }
 
         void Update() {
-            if (Input.GetMouseButtonDown(0)) {
+            if (Input.GetMouseButtonDown(0) && _currentCell == null) {
                 Vector3 mouse = UtilsClass.GetMouseWorldPositionOverPlane(_camera, GetGridPlane(0.0f));
 
                 _currentCell = _inventory.GetObject(mouse);
                 if (_currentCell != null) {
                     ((Transform) _currentCell.GetObject()).gameObject.SetActive(false);
-                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), null);
+                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().z), null);
                     hollowCell.gameObject.SetActive(true);
                 }
 
-            }else if (Input.GetMouseButtonUp(0) && _currentCell != null) {
+            }
+
+            if (Input.GetMouseButtonUp(0) && _currentCell != null) {
                 Vector3 mouse = UtilsClass.GetMouseWorldPositionOverPlane(_camera, GetGridPlane(0.0f));
 
                 if (!_inventory.SetObject(mouse, _currentCell)) {
-                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().y), _currentCell);
+                    _inventory.SetObject(new int3(_currentCell.GetPosition().x, 0, _currentCell.GetPosition().z), _currentCell);
                 }
 
                 ((Transform) _currentCell.GetObject()).gameObject.SetActive(true);
